@@ -109,7 +109,7 @@ class InfCabGlue:
                 if filename not in files: continue
                 file.append(files[filename])
                 
-                file.append(line[1].strip() if len(line) > 1 else filename)
+                file.append(line[1].strip() if len(line[1].strip()) > 1 else filename)
                 file.append(destinations[section])
                  
                 file.append(int(line[3].strip(), 16) if len(line) > 3 else 0)

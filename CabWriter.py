@@ -71,10 +71,11 @@ class CabWriter:
         # Files.
         files_offset = offset;
         files = '';
+            # MS Cabwiz arranges files in reverse order, duplicated here to make debugging binaries easier
         for i in range(len(self.Files)):
             file = self.Files[i]
             files += struct.pack('<HHHIH', i + 1, file[5], i + 1, file[4], len(file[2]) + 1)
-            files += file[6] + '\0'
+            files += file[2] + '\0'
 
         offset += len(files)
     
