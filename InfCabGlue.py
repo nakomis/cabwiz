@@ -15,7 +15,7 @@ class InfCabGlue:
         if 'cpu-type' in self.__parameters:
             filename += '.' + self.__parameters['cpu-type']
         
-        return filename + ".CAB"
+        return filename + ".cab"
     
     def __parse_general(self, cab):
         if ('AppName' not in self.__inf['CEStrings'] or
@@ -46,13 +46,10 @@ class InfCabGlue:
         return [major, minor]
     
     def __parse_device(self, cab):
-        if ('ProcessorType' not in self.__inf['CEDevice'] or 
-            'VersionMin' not in self.__inf['CEDevice'] or 
+        if ('VersionMin' not in self.__inf['CEDevice'] or
             'VersionMax' not in self.__inf['CEDevice']):
             return False
-        
-        cab.Architecture = int(self.__inf['CEDevice']['ProcessorType'])
-        
+
         min = self.__parse_device_version('VersionMin')
         if not min: return False
         cab.VersionMin = min
@@ -312,7 +309,9 @@ class InfCabGlue:
         if verbose: print 'Processing INF file ...'
         cab = CabWriter.CabWriter()
         if not self.__parse_general(cab): return False
+        if verbose: print 'Parsed general...'
         if not self.__parse_device(cab): return False
+        if verbose: print 'Parsed device...'
         names = self.__parse_disk_names(cab)
         files = self.__parse_disk_files(cab, names)
         destinations = self.__parse_destinations(cab)
@@ -335,7 +334,7 @@ class InfCabGlue:
 
         if verbose: print 'Removing temporary files ...'
         
-        os.unlink(self.__dest + 'manifest.000')        
+        os.unlink(self.__dest + 'manifest.000')
         for file in cab.Files:
             os.unlink(file[1] + file[0])
         if cab.SetupFile != "": os.unlink(cab.SetupFile)
