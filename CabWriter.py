@@ -74,7 +74,7 @@ class CabWriter:
         for i in range(len(self.Files)):
             file = self.Files[i]
             files += struct.pack('<HHHIH', i + 1, file[5], i + 1, file[4], len(file[2]) + 1)
-            files += file[2] + '\0'
+            files += file[6] + '\0'
 
         offset += len(files)
     
@@ -129,10 +129,9 @@ class CabWriter:
         length = offset;
     
         header = 'MSCE'
-        header += struct.pack('<IIIIIIIIIII', 0, length, 0, 1, self.Architecture, 
-                              self.MinVersion[0], self.MinVersion[1], 
-                              self.MaxVersion[0], self.MaxVersion[1], 
-                              self.MinBuild, self.MaxBuild)
+        header += struct.pack('<IIIIIIIIIII', 0, length, 0,
+                              1, self.Architecture, self.MinVersion[0], self.MinVersion[1],
+                              self.MaxVersion[0], self.MaxVersion[1], self.MinBuild, self.MaxBuild)
         header += struct.pack('<HHHHHH', len(self.Strings), len(self.Dirs), 
                               len(self.Files), len(self.RegHives), 
                               len(self.RegKeys), len(self.Links))
