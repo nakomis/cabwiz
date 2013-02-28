@@ -129,17 +129,21 @@ class CabWriter:
         length = offset;
     
         header = 'MSCE'
+            # Versions
         header += struct.pack('<IIIIIIIIIII', 0, length, 0,
                               1, self.Architecture, self.MinVersion[0], self.MinVersion[1],
                               self.MaxVersion[0], self.MaxVersion[1], self.MinBuild, self.MaxBuild)
+            # String Counts
         header += struct.pack('<HHHHHH', len(self.Strings), len(self.Dirs), 
                               len(self.Files), len(self.RegHives), 
                               len(self.RegKeys), len(self.Links))
+            # String offsets
         header += struct.pack('<IIIIII', strings_offset, directories_offset, 
                               files_offset, reghives_offset, regkeys_offset, links_offset)
-        header += struct.pack('<HHHHHHHH', application_offset, len(self.AppName), 
-                              provider_offset, len(self.Provider), 
-                              unsupported_offset, len(self.Unsupported), 0, 0)
+            # App data
+        header += struct.pack('<HHHHHHHH', application_offset, len(application),
+                              provider_offset, len(provider),
+                              unsupported_offset, len(unsupported), 0, 0)
         
         return (header + application + provider + unsupported + 
                 strings + directories + files + reghives + regkeys + links)
