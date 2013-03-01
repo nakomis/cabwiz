@@ -107,8 +107,10 @@ class CabWriter:
                     content += item + '\0'
                 content += '\0'
             else: continue
-
-            regkeys += struct.pack('<HHHIH', i + 1, key[0], 1, key[3], len(content))
+            useSubstitution = 0
+            if (str(key[4])).startswith('%'):
+                useSubstitution = 1
+            regkeys += struct.pack('<HHHIH', i + 1, key[0], useSubstitution, key[3], len(content))
             regkeys += content
 
         offset += len(regkeys)
@@ -125,7 +127,7 @@ class CabWriter:
             links += struct.pack('<H', 0)
         
         offset += len(links)
-    
+
         # Header.
         length = offset;
     
